@@ -1,0 +1,33 @@
+  - name: intstall docker
+    tags: docker
+    apt:
+      name: docker.io
+
+  - name: Adding Docker group to the current user
+    shell: |
+      usermod -aG docker corneta
+
+  - name: Getting the docker image of Ubuntu
+    shell: |
+      docker run ubuntu
+
+  - name: Copying Docker_file in servers
+    tags: copy_dockerfile
+    copy:
+      src: ~/CPE232_HOA11/dockerfile
+      dest: /home/corneta
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Building Dockerfile
+    shell: |
+      cd dockerfile
+      docker build -t cpe232:1.2 .
+ 
+  - name: Checking Docker Images
+    shell: 'docker images'
+    register: command_output
+
+  - debug:
+           var: command_output.stdout_lines
